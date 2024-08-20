@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeStocks - Stock Market Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
+    #game {
+      max-width: 100%;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      word-wrap: break-word;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    td button {
+      padding: 5px 10px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 3px;
+    }
+    #player-info, #stock-market {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    #player-info {
+      margin-bottom: 20px;
+    }
+    #stock-market {
+      margin-bottom: 20px;
+    }
+    #status {
+      text-align: center;
+      font-weight: bold;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    #portfolio li {
+      margin-bottom: 10px;
+    }
+    .profit {
+      color: green;
+    }
+    .loss {
+      color: red;
+    }
+    #holding-table {
+      margin-top: 20px;
+    }
+    #holding-table th, #holding-table td {
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      #player-info, #stock-market {
+        float: none;
+        width: 100%;
+      }
+      table {
+        font-size: 14px;
+      }
+      td button {
+        font-size: 12px;
+        padding: 4px 8px;
+      }
+    }
+    @media (max-width: 480px) {
+      table {
+        font-size: 12px;
+      }
+      td button {
+        font-size: 10px;
+        padding: 3px 6px;
+      }
+      #player-info ul, #stock-market table, #holding-table table {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to LifeStocks - The Stock Market Game</h1>
+
+  <div id="game">
+    <div id="player-info">
+      <h2>Player Information</h2>
+      <p>Cash Balance: $<span id="cash">3000.00</span></p>
+      <p>Investment Total: $<span id="investment-total">0.00</span></p>
+      <p>Current Total: $<span id="current-total">0.00</span></p>
+      <p>Return: $<span id="return" class="profit">0.00</span></p>
+      <div id="units-owned">
+        <p>Units Owned:</p>
+        <ul>
+          <li>Apple: <span id="units-A">0</span></li>
+          <li>Tata: <span id="units-B">0</span></li>
+          <li>Toyota: <span id="units-C">0</span></li>
+          <li>Android: <span id="units-D">0</span></li>
+          <li>Tesla: <span id="units-E">0</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="stock-market">
+      <h2>Stock Market</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Price</th>
+            <th>Current</th>
+            <th>Buy</th>
+            <th>Sell</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Apple</td>
+            <td>$<span id="price-A">100.00</span></td>
+            <td>$<span id="current-A">0.00</span></td>
+            <td><input type="number" id="qty-buy-A" value="0" min="0" style="width: 40px;"><button onclick="buyStock('A')">Buy</button></td>
+            <td><input type="number" id="qty-sell-A" value="0" min="0" style="width: 40px;"><button onclick="sellStock('A')">Sell</button></td>
+          </tr>
+          <tr>
+            <td>Tata</td>
+            <td>$<span id="price-B">120.00</span></td>
+            <td>$<span id="current-B">0.00</span></td>
+            <td><input type="number" id="qty-buy-B" value="0" min="0" style="width: 40px;"><button onclick="buyStock('B')">Buy</button></td>
+            <td><input type="number" id="qty-sell-B" value="0" min="0" style="width: 40px;"><button onclick="sellStock('B')">Sell</button></td>
+          </tr>
+          <tr>
+            <td>Toyota</td>
+            <td>$<span id="price-C">80.00</span></td>
+            <td>$<span id="current-C">0.00</span></td>
+            <td><input type="number" id="qty-buy-C" value="0" min="0" style="width: 40px;"><button onclick="buyStock('C')">Buy</button></td>
+            <td><input type="number" id="qty-sell-C" value="0" min="0" style="width: 40px;"><button onclick="sellStock('C')">Sell</button></td>
+          </tr>
+          <tr>
+            <td>Android</td>
+            <td>$<span id="price-D">150.00</span></td>
+            <td>$<span id="current-D">0.00</span></td>
+            <td><input type="number" id="qty-buy-D" value="0" min="0" style="width: 40px;"><button onclick="buyStock('D')">Buy</button></td>
+            <td><input type="number" id="qty-sell-D" value="0" min="0" style="width: 40px;"><button onclick="sellStock('D')">Sell</button></td>
+          </tr>
+          <tr>
+            <td>Tesla</td>
+            <td>$<span id="price-E">90.00</span></td>
+            <td>$<span id="current-E">0.00</span></td>
+            <td><input type="number" id="qty-buy-E" value="0" min="0" style="width: 40px;"><button onclick="buyStock('E')">Buy</button></td>
+            <td><input type="number" id="qty-sell-E" value="0" min="0" style="width: 40px;"><button onclick="sellStock('E')">Sell</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="status"></div>
+  </div>
+
+  <div id="holding-table">
+    <h2>Holding Table</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Units</th>
+          <th>Investment</th>
+          <th>Current</th>
+          <th>Profit/Loss</th>
+        </tr>
+      </thead>
+      <tbody id="holding-table-body">
+        <!-- Portfolio holdings will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let cash = 3000.00;
+    let investmentTotal = 0;
+    let currentTotal = 0;
+    let returnTotal = 0;
+    let portfolio = {
+      A: { units: 0, investment: 0 },
+      B: { units: 0, investment: 0 },
+      C: { units: 0, investment: 0 },
+      D: { units: 0, investment: 0 },
+      E: { units: 0, investment: 0 }
+    };
+
+    const companyName = {
+      A: "Apple",
+      B: "Tata",
+      C: "Toyota",
+      D: "Android",
+      E: "Tesla"
+    };
+
+    const initialPrices = {
+      A: 100.00,
+      B: 120.00,
+      C: 80.00,
+      D: 150.00,
+      E: 90.00
+    };
+
+    function updatePrices() {
+      for (let stock in initialPrices) {
+        let newPrice = (initialPrices[stock] * (1 + (Math.random() - 0.5) * 0.1)).toFixed(2);
+        document.getElementById(`price-${stock}`).innerText = newPrice;
+      }
+      updatePortfolioValues();
+    }
+
+    function buyStock(stock) {
+      const quantity = parseInt(document.getElementById(`qty-buy-${stock}`).value);
+      const price = parseFloat(document.getElementById(`price-${stock}`).innerText);
+      const totalCost = price * quantity;
+
+      if (quantity > 0 && cash >= totalCost) {
+        cash -= totalCost;
+        portfolio[stock].units += quantity;
+        portfolio[stock].investment += totalCost;
+        updatePortfolioValues();
+      } else {
+        document.getElementById('status').innerText = "Insufficient funds or invalid quantity.";
+      }
+    }
+
+    function sellStock(stock) {
+      const quantity = parseInt(document.getElementById(`qty-sell-${stock}`).value);
+      const price = parseFloat(document.getElementById(`price-${stock}`).innerText);
+
+      if (quantity > 0 && portfolio[stock].units >= quantity) {
+        const saleProceeds = price * quantity;
+        cash += saleProceeds;
+        portfolio[stock].units -= quantity;
+        portfolio[stock].investment -= (portfolio[stock].investment / portfolio[stock].units) * quantity;
+        updatePortfolioValues();
+      } else {
+        document.getElementById('status').innerText = "Insufficient shares to sell or invalid quantity.";
+      }
+    }
+
+    function updatePortfolioValues() {
+      investmentTotal = 0;
+      currentTotal = 0;
+      returnTotal = 0;
+
+      let holdingTableBody = document.getElementById('holding-table-body');
+      holdingTableBody.innerHTML = '';
+
+      for (let stock in portfolio) {
+        const price = parseFloat(document.getElementById(`price-${stock}`).innerText);
+        const currentValue = portfolio[stock].units * price;
+        investmentTotal += portfolio[stock].investment;
+        currentTotal += currentValue;
+        const profitOrLoss = currentValue - portfolio[stock].investment;
+        returnTotal += profitOrLoss;
+
+        document.getElementById(`units-${stock}`).innerText = portfolio[stock].units;
+        document.getElementById(`current-${stock}`).innerText = currentValue.toFixed(2);
+
+        let row = holdingTableBody.insertRow();
+        row.insertCell(0).innerText = companyName[stock];
+        row.insertCell(1).innerText = portfolio[stock].units;
+        row.insertCell(2).innerText = portfolio[stock].investment.toFixed(2);
+        row.insertCell(3).innerText = currentValue.toFixed(2);
+        row.insertCell(4).innerText = profitOrLoss.toFixed(2);
+        row.cells[4].classList.add(profitOrLoss >= 0 ? 'profit' : 'loss');
+      }
+
+      document.getElementById('cash').innerText = cash.toFixed(2);
+      document.getElementById('investment-total').innerText = investmentTotal.toFixed(2);
+      document.getElementById('current-total').innerText = currentTotal.toFixed(2);
+      document.getElementById('return').innerText = returnTotal.toFixed(2);
+      document.getElementById('return').classList.toggle('profit', returnTotal >= 0);
+      document.getElementById('return').classList.toggle('loss', returnTotal < 0);
+    }
+
+    setInterval(updatePrices, 15000);  // Update prices every 15 seconds
+
+    updatePortfolioValues();  // Initialize values on page load
+  </script>
+</body>
+</html>
